@@ -51,7 +51,7 @@ import os
 import sys
 import pyglet
 
-pyglet.lib.load_library('avbin64')
+pyglet.lib.load_library('../lib/avbin64.dll')
 pyglet.have_avbin=True
 
 # if len(sys.argv) < 2:
