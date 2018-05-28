@@ -51,6 +51,15 @@ import os
 import sys
 import pyglet
 
+from win32api import GetSystemMetrics
+
+screen_width = GetSystemMetrics(0)
+screen_height = GetSystemMetrics(1)
+
+# Disable error checking for increased performance
+pyglet.options['debug_gl'] = False
+# from pyglet.gl import *
+
 pyglet.lib.load_library('../lib/avbin64.dll')
 pyglet.have_avbin=True
 
@@ -60,7 +69,7 @@ pyglet.have_avbin=True
 
 # video_path = sys.argv[1]
 #video_path = "F:\\Grant_Peng\\Code\\Python\\pyglet_video\\res\\b.wmv"
-video_path = "../res/b.wmv"
+video_path = "../res/a.wmv"
 source = pyglet.media.load(video_path)
 print("video_path = ", video_path)
 
@@ -76,11 +85,14 @@ player.queue(source)
 player.play()
 print("player play...")
 
-window = pyglet.window.Window(width=format.width, height=format.height)
+video_width = format.width;
+video_height = format.height;
 
+window = pyglet.window.Window(width=screen_width, height=screen_height)
+window.set_fullscreen(True);
 
 @window.event
 def on_draw():
-    player.get_texture().blit(0, 0)
+    player.get_texture().blit((screen_width-format.width)/2, (screen_height-format.height)/2, width=format.width, height=format.height)
 
 pyglet.app.run()
