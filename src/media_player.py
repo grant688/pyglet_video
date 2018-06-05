@@ -153,6 +153,81 @@ Slider.register_event_type('on_begin_scroll')
 Slider.register_event_type('on_end_scroll')
 Slider.register_event_type('on_change')
 
+class MainWindow(pyglet.window.Window):
+    GUI_WIDTH = 600
+    GUI_HEIGHT = 400
+    GUI_PADDING = 16
+    GUI_BUTTON_HEIGHT = 60
+
+    def __init__(self):
+        super(MainWindow, self).__init__()
+        window=self
+        self.set_background()
+
+        self.video_button = TextButton(self)
+        self.video_button.x = self.GUI_PADDING
+        self.video_button.y = self.GUI_PADDING
+        self.video_button.height = self.GUI_BUTTON_HEIGHT
+        self.video_button.width = 100
+        self.video_button.text = 'Realove'
+        video_file1 = "../res/b.wmv"
+        self.video_button.on_press = self.play_video(video_file1)
+
+        self.controls = [
+            self.video_button,
+        ]
+
+
+        # self.set_fullscreen(True)
+
+    def set_background(self):
+        filename = "../res/b.jpg"
+        self.img = pyglet.image.load(filename).get_texture(rectangle=True)
+        self.img.anchor_x = self.img.width // 2
+        self.img.anchor_y = self.img.height // 2
+
+        checks = pyglet.image.create(32, 32, pyglet.image.CheckerImagePattern())
+        self.background = pyglet.image.TileableTexture.create_for_image(checks)
+
+        # Enable alpha blending, required for image.blit.
+        glEnable(GL_BLEND)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
+        self.width = self.img.width
+        self.height = self.img.height
+        self.set_visible()
+
+    def on_draw(self):
+        self.clear()
+
+        self.background.blit_tiled(0, 0, 0, window.width, window.height)
+        self.img.blit(window.width // 2, window.height // 2, 0)
+        for control in self.controls:
+            control.draw()
+
+    def play_video(self, video_file="../res/b.wmv"):
+        print("play_video enter video_file =", video_file)
+        have_video = False
+
+        player = pyglet.media.Player()
+        window = PlayerWindow(player)
+
+        source = pyglet.media.load(video_file)
+        player.queue(source)
+
+        have_video = have_video or bool(source.video_format)
+
+        window.gui_update_source()
+        window.set_default_video_size()
+        window.set_visible(True)
+
+        player.play()
+        window.gui_update_state()
+
+        if not have_video:
+            pyglet.clock.schedule_interval(lambda dt: None, 0.2)
+
+
 
 class PlayerWindow(pyglet.window.Window):
     GUI_WIDTH = 400
@@ -321,26 +396,27 @@ if __name__ == '__main__':
     #     print('Usage: media_player.py <filename> [<filename> ...]')
     #     sys.exit(1)
 
-    have_video = False
-    filelist=["../res/a.wmv",]
-    # for filename in sys.argv[1:]:
-    for filename in filelist[0:]:
-        player = pyglet.media.Player()
-        window = PlayerWindow(player)
+    # have_video = False
+    # filelist=["../res/a.wmv",]
+    # # for filename in sys.argv[1:]:
+    # for filename in filelist[0:]:
+    #     player = pyglet.media.Player()
+    #     window = PlayerWindow(player)
 
-        source = pyglet.media.load(filename)
-        player.queue(source)
+    #     source = pyglet.media.load(filename)
+    #     player.queue(source)
 
-        have_video = have_video or bool(source.video_format)
+    #     have_video = have_video or bool(source.video_format)
 
-        window.gui_update_source()
-        window.set_default_video_size()
-        window.set_visible(True)
+    #     window.gui_update_source()
+    #     window.set_default_video_size()
+    #     window.set_visible(True)
 
-        player.play()
-        window.gui_update_state()
+    #     player.play()
+    #     window.gui_update_state()
 
-    if not have_video:
-        pyglet.clock.schedule_interval(lambda dt: None, 0.2)
+    # if not have_video:
+    #     pyglet.clock.schedule_interval(lambda dt: None, 0.2)
+    window = MainWindow()
 
     pyglet.app.run()
