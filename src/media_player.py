@@ -155,7 +155,7 @@ Slider.register_event_type('on_change')
 
 class MainWindow(pyglet.window.Window):
     GUI_WIDTH = 600
-    GUI_HEIGHT = 400
+    GUI_HEIGHT = 100
     GUI_PADDING = 16
     GUI_BUTTON_HEIGHT = 60
 
@@ -197,6 +197,20 @@ class MainWindow(pyglet.window.Window):
         self.height = self.img.height
         self.set_visible()
 
+    def on_mouse_press(self, x, y, button, modifiers):
+        print("on_mouse_press x =", x)
+        print("on_mouse_press y =", y)
+        for control in self.controls:
+            if control.hit_test(x, y):
+                print("on_mouse_press hit_test yes")
+                control.on_mouse_press(x, y, button, modifiers)
+
+    def on_key_press(self, symbol, modifiers):
+        if symbol == key.ESCAPE:
+            self.dispatch_event('on_close')
+        else:
+            print("on_key_press symbol =", symbol)
+
     def on_draw(self):
         self.clear()
 
@@ -204,6 +218,9 @@ class MainWindow(pyglet.window.Window):
         self.img.blit(window.width // 2, window.height // 2, 0)
         for control in self.controls:
             control.draw()
+
+    def on_close(self):
+        self.close()
 
     def play_video(self, video_file="../res/b.wmv"):
         print("play_video enter video_file =", video_file)
