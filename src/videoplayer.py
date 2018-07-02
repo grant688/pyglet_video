@@ -126,10 +126,11 @@ class PlayerWindow():
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
     app.setApplicationName("Video Player")
-    # window = MainWindow()
-    window = PlayerWindow()
+    window = MainWindow()
+    window.show()
 
-    # window.show()
-    pyglet.app.run()
+    #window = PlayerWindow()
+
+    # pyglet.app.run()
     sys.exit(app.exec_())
 
