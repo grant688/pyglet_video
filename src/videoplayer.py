@@ -49,43 +49,27 @@ class MainWindow(QtGui.QWidget):
                                  "QPushButton:hover{background-color:#333333;}")
 
         #注册事件
-        self.connect(qbtn_one,QtCore.SIGNAL("clicked()"),QtGui.qApp,QtCore.SLOT("quit()"))
+        self.connect(qbtn_one,QtCore.SIGNAL("clicked()"),self.handlePlay)
         self.connect(qbtn_close,QtCore.SIGNAL("clicked()"),QtGui.qApp,QtCore.SLOT("quit()"))
 
-        # video_path = "../res/a.wmv"
-        # source = pyglet.media.load(video_path)
-        # print("video_path = ", video_path)
-
-        # format = source.video_format
-        # print("format = ", format)
-        # if not format:
-        #     print('No video track in this source.')
-        #     sys.exit(1)
-
-        # self.player = pyglet.media.Player()
-        # self.player.queue(source)
-        # self.player.play()
-
-        # self.showFullScreen()    #全屏显示必须放在所有组件画完以后执行
+    def handlePlay(self):
+        self.player_window = PlayerWindow()
+        pyglet.app.run()
 
     def keyPressEvent(self, event):
+        print("MainWindow(): keyPressEvent = ", event)
         if event.key() == QtCore.Qt.Key_A:
-            # self.showFullScreen()
-            player_window = PlayerWindow()
-            # pyglet.app.run()
+            self.showFullScreen()
         if event.key() == QtCore.Qt.Key_Escape:
             self.showNormal()
 
-    # def on_draw(self):
-    #     #self.clear()
-    #     self.player.get_texture().blit((self.width-self.player.width)/2, self.player.y, width=self.player.width, height=self.player.height)
 
 # class PlayerWindow(pyglet.window.Window):
-class PlayerWindow():
+class PlayerWindow(pyglet.window.Window):
     def __init__(self):
-        # super(PlayerWindow, self).__init__(caption='Media Player',
-        #                                    visible=False,
-        #                                    resizable=True)
+        super(PlayerWindow, self).__init__(caption='Media Player',
+                                           visible=False,
+                                           resizable=True)
         video_path = "../res/a.wmv"
         source = pyglet.media.load(video_path)
         print("video_path = ", video_path)
@@ -96,32 +80,53 @@ class PlayerWindow():
             print('No video track in this source.')
             sys.exit(1)
 
-        player = pyglet.media.Player()
+        self.player = pyglet.media.Player()
         print("get player ...")
-        player.queue(source)
-        player.play()
+        self.player.queue(source)
+        self.player.play()
         print("player play...")
 
-        # video_width = format.width;
-        # video_height = format.height;
+        video_width = format.width;
+        video_height = format.height;
 
-        video_width = screen_width
-        video_height = screen_height
+        # video_width = screen_width
+        # video_height = screen_height
 
         window = pyglet.window.Window(width=screen_width, height=screen_height)
 
-        # window.set_visible(True)
-        window.set_fullscreen(True)
+        # self.window.set_fullscreen(True)
 
-        # window = mainwindow
-        # window.showFullScreen()
+        window.push_handlers(pyglet.window.event.WindowEventLogger())
 
         @window.event
         def on_draw():
             window.clear()
-            player.get_texture().blit((screen_width-format.width)/2, (screen_height-format.height)/2, width=format.width, height=format.height)
+            self.player.get_texture().blit((screen_width-format.width)/2, (screen_height-format.height)/2, width=format.width, height=format.height)
 
+        @window.event
+        def on_close():
+            print("PlayerWindow(): on_close.")
+            self.player.pause()
+            self.close()
 
+        @window.event
+        def on_key_press(symbol,modifiers):
+            print("PlayerWindow(): on_key_press, symbol = ", symbol)
+            print("PlayerWindow(): on_key_press, ESCAPE = ", pyglet.window.key.ESCAPE)
+            print("PlayerWindow(): on_key_press, A = ", pyglet.window.key.A)
+            if symbol == pyglet.window.key.ESCAPE:
+                print("PlayerWindow(): on_key_press,000000000000000")
+                # self.dispatch_event('on_close')
+            if symbol == pyglet.window.key.A:
+                print("PlayerWindow(): on_key_press,111111111111111")
+                window.set_fullscreen(True)
+
+    # def keyPressEvent(self, event):
+    #     print("PlayerWindow(): keyPressEvent = ", event)
+    #     if event.key() == QtCore.Qt.Key_A:
+    #         self.MainWindow.set_fullscreen(True)
+    #     if event.key() == QtCore.Qt.Key_Escape:
+    #         self.on_close()
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
@@ -129,8 +134,5 @@ if __name__ == '__main__':
     window = MainWindow()
     window.show()
 
-    #window = PlayerWindow()
-
-    # pyglet.app.run()
     sys.exit(app.exec_())
 
