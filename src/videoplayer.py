@@ -19,6 +19,22 @@ import pyglet
 
 from win32api import GetSystemMetrics
 
+if 0:
+    import UserList
+    import UserString
+    import UserDict
+    import itertools
+    import collections
+    import future.backports.misc
+    import commands
+    import base64
+    import __buildin__
+    import math
+    import reprlib
+    import functools
+    import re
+    import subprocess
+
 screen_width = GetSystemMetrics(0)
 screen_height = GetSystemMetrics(1)
 
@@ -26,8 +42,22 @@ screen_height = GetSystemMetrics(1)
 pyglet.options['debug_gl'] = False
 
 
-pyglet.lib.load_library('../lib/avbin64.dll')
-pyglet.have_avbin=True
+# pyglet.lib.load_library('../lib/avbin64.dll')
+# pyglet.lib.load_library('avbin64.dll')
+pyglet.have_avbin=False
+
+
+
+print(__file__)
+print(os.path.realpath(__file__))
+print('using sys.executable:', repr(os.path.dirname(os.path.realpath(sys.executable))))
+print('using sys.argv[0]:',    repr(os.path.dirname(os.path.realpath(sys.argv[0]))))
+print(sys.argv[0])
+print(sys.path[0])
+
+# res_path = "./"
+res_path = sys.path[0] + "\\"
+print(res_path)
 
 class MainWindow(QtGui.QWidget):
     def __init__(self, parent=None):
@@ -35,7 +65,8 @@ class MainWindow(QtGui.QWidget):
 
         # set background
         palette=QtGui.QPalette()
-        icon=QtGui.QPixmap('../res/background.jpg')
+        # icon=QtGui.QPixmap('../res/background.jpg')
+        icon=QtGui.QPixmap(res_path + "background.jpg")
         palette.setBrush(self.backgroundRole(), QtGui.QBrush(icon)) #添加背景图片
         self.setPalette(palette)
         self.color=QtGui.QColor(0, 0, 255)
@@ -65,7 +96,8 @@ class MainWindow(QtGui.QWidget):
         self.qbtn_1.setGeometry(400,360,80,80)
         self.qbtn_1.setStyleSheet("QPushButton{background-color:#16A085;border:none;color:#ffffff;font-size:20px;}"
                                "QPushButton:hover{background-color:#333333;}")
-        self.qbtn_1.setIcon(QtGui.QIcon("../res/btn1.jpg"));
+        # self.qbtn_1.setIcon(QtGui.QIcon("../res/btn1.jpg"));
+        self.qbtn_1.setIcon(QtGui.QIcon(res_path + "btn1.jpg"));
         self.qbtn_1.setIconSize(QSize(80, 80));
         self.qbtn_1.clicked.connect(lambda:self.whichbtn(self.qbtn_1))
 
@@ -73,7 +105,8 @@ class MainWindow(QtGui.QWidget):
         self.qbtn_2.setGeometry(400,460,80,80)
         self.qbtn_2.setStyleSheet("QPushButton{background-color:#16A085;border:none;color:#ffffff;font-size:20px;}"
                 "QPushButton:hover{background-color:#333333;}")
-        self.qbtn_2.setIcon(QtGui.QIcon("../res/btn2.png"))
+        # self.qbtn_2.setIcon(QtGui.QIcon("../res/btn2.png"))
+        self.qbtn_2.setIcon(QtGui.QIcon(res_path + "btn2.png"))
         self.qbtn_2.setIconSize(QSize(80, 80));
         self.qbtn_2.clicked.connect(lambda:self.whichbtn(self.qbtn_2))
 
@@ -81,7 +114,8 @@ class MainWindow(QtGui.QWidget):
         self.qbtn_3.setGeometry(400,560,80,80)
         self.qbtn_3.setStyleSheet("QPushButton{background-color:#16A085;border:none;color:#ffffff;font-size:20px;}"
                 "QPushButton:hover{background-color:#333333;}")
-        self.qbtn_3.setIcon(QtGui.QIcon("../res/btn3.png"))
+        # self.qbtn_3.setIcon(QtGui.QIcon("../res/btn3.png"))
+        self.qbtn_3.setIcon(QtGui.QIcon(res_path + "btn3.png"))
         self.qbtn_3.setIconSize(QSize(80, 80));
         self.qbtn_3.clicked.connect(lambda:self.whichbtn(self.qbtn_3))
 
@@ -89,7 +123,8 @@ class MainWindow(QtGui.QWidget):
         self.qbtn_4.setGeometry(400,660,80,80)
         self.qbtn_4.setStyleSheet("QPushButton{background-color:#16A085;border:none;color:#ffffff;font-size:20px;}"
                 "QPushButton:hover{background-color:#333333;}")
-        self.qbtn_4.setIcon(QtGui.QIcon("../res/btn4.jpg"))
+        # self.qbtn_4.setIcon(QtGui.QIcon("../res/btn4.jpg"))
+        self.qbtn_4.setIcon(QtGui.QIcon(res_path + "btn4.jpg"))
         self.qbtn_4.setIconSize(QSize(80, 80));
         self.qbtn_4.clicked.connect(lambda:self.whichbtn(self.qbtn_4))
 
@@ -105,17 +140,17 @@ class MainWindow(QtGui.QWidget):
 
     def whichbtn(self,b):
         print("clicked button is b2")
-        video_path = "../res/a.wmv"
+        video_path = res_path + "a.wmv"
         if b == self.qbtn_1:
-            video_path = "../res/a.wmv"
+            video_path = res_path + "a.wmv"
         elif b == self.qbtn_2:
-            video_path = "../res/b.wmv"
+            video_path = res_path + "b.wmv"
 
         self.player_window = PlayerWindow(video_path)
         pyglet.app.run()
 
     def handlePlay(self):
-        video_path = "../res/a.wmv"
+        video_path = res_path + "a.wmv"
         self.player_window = PlayerWindow(video_path)
         pyglet.app.run()
 
